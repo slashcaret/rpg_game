@@ -116,29 +116,58 @@ while running:
             continue
         else:
             ittem = player.items[item_index]["item"]
-            
+
             if ittem.type == "potion" and (p_hp < threshold_hp):
-                player.heal(ittem.prop)
-                print(bcolors.OKGREEN + bcolors.BOLD)
-                print("Your HP increased by {} with {}".format(ittem.name, ittem.prop))
-                print(bcolors.ENDC)
+    
+                if player.items[item_index]["quantity"] > 0:
+                    player.heal(ittem.prop)
+                    player.items[item_index]["quantity"] -= 1
+                    print(bcolors.OKGREEN + bcolors.BOLD)
+                    print("Your HP increased by {} with {}".format(ittem.name, ittem.prop))
+                    print(bcolors.ENDC)
+                else:
+                    print(bcolors.FAIL + bcolors.BOLD)
+                    print("Not Enough {}".format(ittem.name))
+                    print(bcolors.ENDC)
+                    continue
+                    
             elif ittem.type == "potion" and (p_hp >= threshold_hp):
                 print("No Need To Use potion")
                 continue
+
             elif ittem.type == "elixer" and ((p_hp < threshold_hp) or (p_mp < threshold_mp)):
-                player.heal(ittem.prop)
-                player.heal_MP(ittem.prop)
-                print(bcolors.OKGREEN + bcolors.BOLD)
-                print("Your HP and MP is Full by {} ".format(ittem.name))
-                print(bcolors.ENDC)
+    
+                if player.items[item_index]["quantity"] > 0:
+                    player.heal(ittem.prop)
+                    player.heal_MP(ittem.prop)
+                    player.items[item_index]["quantity"] -= 1
+                    print(bcolors.OKGREEN + bcolors.BOLD)
+                    print("Your HP and MP is Full by {} ".format(ittem.name))
+                    print(bcolors.ENDC)
+                else:
+                    print(bcolors.FAIL + bcolors.BOLD)
+                    print("Not Enough {}".format(ittem.name))
+                    print(bcolors.ENDC)
+                    continue
+                
             elif ittem.type == "elixer" and ((p_hp >= threshold_hp) or (p_mp >= threshold_mp)):
                 print("No Need To Use Elixer")
                 continue
+
             elif ittem.type == "weapon":
-                print(bcolors.OKBLUE + bcolors.BOLD)
-                print("You Attacked Enemy with {} Which deals {} damage".format(ittem.name, ittem.prop))
-                print(bcolors.ENDC)
-                enemy.take_damage(ittem.prop)
+    
+                if player.items[item_index]["quantity"] > 0:
+                    player.items[item_index]["quantity"] -= 1
+                    print(bcolors.OKBLUE + bcolors.BOLD)
+                    print("You Attacked Enemy with {} Which deals {} damage".format(ittem.name, ittem.prop))
+                    print(bcolors.ENDC)
+                    enemy.take_damage(ittem.prop)
+                else:
+                    print(bcolors.FAIL + bcolors.BOLD)
+                    print("Not Enough {}".format(ittem.name))
+                    print(bcolors.ENDC)
+                    continue
+                    
     
     ################################### Enemy Attacks ###################################
     time.sleep(0.5)
